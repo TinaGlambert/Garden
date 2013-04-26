@@ -106,7 +106,7 @@ class QQSignInPlugin extends Gdn_Plugin {
 		$Form->SetFormValue('UniqueID', $ID);
 		$Form->SetFormValue('Provider', 'QQ');
 		$Form->SetFormValue('ProviderName', 'QQSignIn');
-		$Form->SetFormValue('Name', GetValue('nickname', $Response));
+		$Form->SetFormValue('Name', htmlspecialchars(GetValue('nickname', $Response)));
 		//$Form->SetFormValue('FullName', GetValue('name', $Profile));
 		$Form->SetFormValue('Email', GetValue('nickname', $Response).'@via.qq');
 		$Form->SetFormValue('Photo', GetValue('figureurl', $Response));
