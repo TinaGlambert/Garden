@@ -52,10 +52,10 @@ class Gdn_Upload extends Gdn_Pluggable {
 		if (ini_get('file_uploads') != 1)
 			return FALSE;
 
-		if (!is_dir($UploadPath))
-			@mkdir($UploadPath);
-		if (!is_dir($UploadPath))
-			return FALSE;
+		//if (!is_dir($UploadPath))
+		//	@mkdir($UploadPath);
+		//if (!is_dir($UploadPath))
+		//	return FALSE;
 
       if (!IsWritable($UploadPath) || !is_readable($UploadPath)) 
 			return FALSE;
@@ -235,7 +235,8 @@ class Gdn_Upload extends Gdn_Pluggable {
       static $Urls = NULL;
 
       if ($Urls === NULL) {
-         $Urls = array('' => Asset('/uploads', TRUE));
+         // $Urls = array('' => Asset('/uploads', TRUE));
+         $Urls = array('' => 'http://myasyz-myasyz.stor.sinaapp.com'); //TODO HARDCODE 
          
          $Sender = new stdClass();
          $Sender->Returns = array();

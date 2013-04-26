@@ -112,10 +112,14 @@ class Gdn_UploadImage extends Gdn_Upload {
       // Figure out the target path.
       $TargetParsed = Gdn_Upload::Parse($Target);
       $TargetPath = PATH_LOCAL_UPLOADS.'/'.ltrim($TargetParsed['Name'], '/');
+      $TargetPathSAE = SAE_TMP_PATH.'/'.ltrim($TargetParsed['Name'], '/');
 
       if (!file_exists(dirname($TargetPath)))
          mkdir(dirname($TargetPath), 0777, TRUE);
       
+      if (!file_exists(dirname($TargetPathSAE)))
+         mkdir(dirname($TargetPathSAE), 0777, TRUE);
+
       // Don't resize if the source dimensions are smaller than the target dimensions
       $XCoord = GetValue('SourceX', $Options, 0);
       $YCoord = GetValue('SourceY', $Options, 0);
@@ -198,14 +202,19 @@ class Gdn_UploadImage extends Gdn_Upload {
 
          // No need to check these, if we get here then whichever function we need will be available
          if ($OutputType == 'gif')
-            imagegif($TargetImage, $TargetPath);
+            imagegif($TargetImage, $TargetPathSAE);
          else if ($OutputType == 'png') {
-            imagepng($TargetImage, $TargetPath, (int)($ImageQuality/10));
+   sae_debug($TargetPathSAE);
+            imagepng($TargetImage, $TargetPathSAE, (int)($ImageQuality/10));
          } else
-            imagejpeg($TargetImage, $TargetPath, $ImageQuality);
+            imagejpeg($TargetImage, $TargetPathSAE, $ImageQuality);
+
+
+	 copy($TargetPathSAE, $TargetPath);
       } else {
          copy($Source, $TargetPath);
       }
+
 
       // Allow a plugin to move the file to a differnt location.
       $Sender = new stdClass();

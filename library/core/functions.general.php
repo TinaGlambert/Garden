@@ -331,8 +331,23 @@ if (!function_exists('Asset')) {
       $Destination = str_replace('\\', '/', $Destination);
       if (substr($Destination, 0, 7) == 'http://' || substr($Destination, 0, 8) == 'https://') {
          $Result = $Destination;
+      } else if ( endsWith($Destination, array('.js', '.css', '.gif', '.png', '.jpg'))) {
+         
+	 if ($Destination == '/js/library/jquery.js'){
+	    $Result = 'http://lib.sinaapp.com/js/jquery/1.6.2/jquery.min.js';
+	    return $Result;
+	 }
+	 
+	 if (isset($_SERVER['HTTP_APPNAME'])){
+	     $WebRoot = 'http://' . $_SERVER['HTTP_APPNAME'] . '.sinaapp.com'; 
+	 } else {
+	     $WebRoot = 'http://' . $_SERVER['HTTP_HOST'];
+	 }
+	 
+	 $Parts = array($WebRoot  , $Destination);
+         $Result = CombinePaths($Parts, '/');
       } else {
-         $Parts = array(Gdn_Url::WebRoot($WithDomain), $Destination);
+	  $Parts = array(Gdn_Url::WebRoot($WithDomain), $Destination);
          if (!$WithDomain)
             array_unshift($Parts, '/');
             
@@ -2330,4 +2345,30 @@ if (!function_exists('Url')) {
       $Result = Gdn::Request()->Url($Path, $WithDomain);
       return $Result;
    }
+}
+
+if (!function_exists('startsWith')){
+    function startsWith($haystack, $needle) {
+    	return !strncmp($haystack, $needle, strlen($needle));
+    }
+}
+
+if (!function_exists('endsWith')){
+    function endsWith($haystack, $needle) {
+    	$length = strlen($needle);
+    	if ($length == 0) {
+    		return true;
+    	}
+    
+    	return (substr($haystack, -$length) === $needle);
+    }
+}
+if (!function_exists('endsWithAny')){
+    function endsWithAny($haystack, array $needle) {
+    	foreach($needle as $n){
+		if (endsWith ($haystack, $n))
+			return true;
+	}
+	return false;
+    }
 }
